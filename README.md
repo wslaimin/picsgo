@@ -5,7 +5,7 @@
 配置config.json
 
 key | explain |
--|-|-
+--- | --- |
 rs | 七牛域名 |
 ak | 七牛AccessKey |
 sk | 七牛SecretKey |
