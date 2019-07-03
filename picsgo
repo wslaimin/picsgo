@@ -1,0 +1,33 @@
+#!/bin/bash
+
+picsgo=$(readlink /usr/local/bin/picsgo)
+path=${picsgo%/picsgo*}
+config=$path/config.json
+qshell=$path/qshell
+ak=$(cat $config | $path/jq -r '.ak')
+sk=$(cat $config | $path/jq -r '.sk')
+name=$(cat $config | $path/jq -r '.name')
+bucket=$1
+key=$2
+
+# 上传图片
+function goF(){
+    if [ -d $1 ]; then
+        for file in $(ls $1)
+            do
+                goF $1/$file
+            done
+    else
+        go $1
+    fi
+}
+
+function go(){
+    f=$1
+    name=${f##*/}
+    $qshell -C $config -d fput $bucket $key/$name $1 --overwrite
+}
+
+# 账号设置
+$qshell account -w $ak $sk $name
+goF $3
